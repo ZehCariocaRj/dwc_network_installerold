@@ -18,7 +18,7 @@ vh8="sake.gs.nintendowifi.net" # Fallback for vh4
 mod1="proxy" # This is a proxy mod that is dependent on the other 2
 mod2="proxy_http" # This is related to mod1
 fqdn="localhost" # This variable fixes the fqdn error in Apache
-UPDATE_URL="https://raw.githubusercontent.com/kyle95wm/dwc_network_installer/master/install.sh"
+UPDATE_URL="https://raw.githubusercontent.com/ZehCariocaRj/dwc_network_installerold/master/install.sh"
 UPDATE_FILE="$0.tmp"
 ip=$(curl -s icanhazip.com) # This variable shows the user's external IP
 ver="2.5.2" # This lets the user know what version of the script they are running
@@ -117,6 +117,7 @@ echo "Please pick from the list of git clones to use"
 echo "1) Polaris [OFFICIAL REPO]"
 echo "2) kyle95wm/BeanJr"
 echo "3) DWC LITE - by kyle95wm - This version has no ban system or admin page. This version is useful for LAN parties where everyone is trusted. There is an option to add IP addresses to a 'kick' table if you wish."
+echo "4) DWC Zeh Pequeno"
 }
 function git_check {
 if [ $serverclone == 1 ] ; then
@@ -129,7 +130,10 @@ git clone http://github.com/kyle95wm/dwc_network_server_emulator
 elif [ $serverclone == 3 ] ; then
 echo "Cloning DWC LITE....."
 git clone https://github.com/kyle95wm/dwc_network_server_emulator_lite
-mv $PWD/dwc_network_server_emulator_lite/ $PWD/dwc_network_server_emulator/
+elif [ $serverclone == 4 ] ; then
+echo "Cloning Zeh Pequeno repository...."
+git clone https://github.com/ZehCariocaRj/dwc_network_server_emulator_kyle95wm
+mv $PWD/dwc_network_server_emulator_kyle95wm/ $PWD/dwc_network_server_emulator/
 else
 echo "$serverclone is not a valid entry! You must type a number (1-3) from the list."
 echo "You will not be able to proceed without the git clone!"
@@ -488,30 +492,27 @@ fi
 echo "setup complete! quitting now...."
 }
 function test {
-apt-get update
-apt-get install git -y
-git clone http://github.com/kyle95wm/dwc_network_server_emulator
-apt-get update -y --fix-missing
-apt-get install apache2 python2.7 python-twisted dnsmasq -y
-cp $vh/$vh1 $apache/$vh1
-cp $vh/$vh2 $apache/$vh2
-cp $vh/$vh3 $apache/$vh3
-cp $vh/$vh4 $apache/$vh4
-a2ensite $vh1 $vh2 $vh3 $vh4
-a2enmod $mod1 $mod2
-service apache2 restart
-service apache2 reload
-apachectl graceful
+apt-get update >/dev/null
+apt-get install git -y >/dev/null
+git clone http://github.com/ZehCariocaRj/dwc_network_server_emulator >/dev/null
+apt-get update -y --fix-missing >/dev/null
+apt-get install apache2 python2.7 python-twisted dnsmasq -y >/dev/null
+cp $vh/$vh1 $apache/$vh1 >/dev/null
+cp $vh/$vh2 $apache/$vh2 >/dev/null
+cp $vh/$vh3 $apache/$vh3 >/dev/null
+cp $vh/$vh4 $apache/$vh4 >/dev/null
+a2ensite $vh1 $vh2 $vh3 $vh4 >/dev/null
+a2enmod $mod1 $mod2 >/dev/null
+service apache2 restart >/dev/null
+service apache2 reload >/dev/null
+apachectl graceful >/dev/null
 cat >>/etc/apache2/apache2.conf <<EOF
 ServerName localhost
 EOF
 service apache2 restart >/dev/null
 cat >>/etc/dnsmasq.conf <<EOF
-address=/nintendowifi.net/$ip
+address=/nintendowifi.net/127.0.0.1
 EOF
-echo "################### SHOW DNSMASQ CONFIG ####################3"
-cat /etc/dnsmasq.conf
-echo "################# END OF DNSMASQ CONFIG #####################"
 cat > ./dwc_network_server_emulator/adminpageconf.json <<EOF
 {"username":"admin","password":"admin"}
 EOF
